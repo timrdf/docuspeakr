@@ -1,6 +1,7 @@
 SELECT ?predicate ?predicateLabel ?predicateDesc ?predicateLabelLanguage ?predicateDescLanguage WHERE{ 
 {%if lodspk.graph%}GRAPH <{{lodspk.graph}}>{%endif%}{
-  ?predicate a rdf:Property.
+  ?predicate a ?type .
+  filter(?type = rdf:Property || ?type = owl:ObjectProperty || ?type = owl:DatatypeProperty)
   OPTIONAL{
     ?predicate 
          rdfs:comment ?predicateDesc.
