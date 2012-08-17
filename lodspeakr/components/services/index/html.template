@@ -777,6 +777,9 @@
 
     </section>
 
+
+
+
    <section id="cross-reference-docuspeakr">
 
       <h1>{%if first.schema.nameLanguage.value%}{{first.schema.nameLanguage.value}}{%else%}{%if first.schema.name.value%}{{first.schema.name.value}}{%else%}{{first.schema.curie}}{%endif%}{%endif%}</h1>
@@ -793,7 +796,6 @@
         </ul>
       </div>
 
-
       <div>
         <h3>Predicates</h3>
         <ul class="hlist">
@@ -805,23 +807,29 @@
         </ul>
       </div>
 
-          <h1>Classes</h1>
-          {% for row in models.classes %}
+
+      <h1>Classes</h1>
+        {% for row in models.classes %}
           <div id="{{row.class.curie}}" class="entity">
-              <h3>
-                Class: <a href="#{{row.class.curie}}"><span class="dotted" title="{{row.class.value}}">{%if row.classLabelLanguage.value%}{{row.classLabelLanguage.value}}{%else%}{%if row.classLabel.value%}{{row.classLabel.value}}{%else%}{{row.class.curie}}{%endif%}{%endif%}</span></a>
-             </h3>
-             <strong>IRI:</strong> <a href="#{{row.class.curie}}"><span class="dotted" title="{{row.class.value}}">{{row.class.value}}</span></a>
+          <h3> Class: 
+            <a href="#{{row.class.curie}}">
+               <span class="dotted" title="{{row.class.value}}">{%if row.classLabelLanguage.value%}{{row.classLabelLanguage.value}}{%else%}{%if row.classLabel.value%}{{row.classLabel.value}}{%else%}{{row.class.curie}}{%endif%}{%endif%}</span>
+            </a>
+          </h3>
+          <strong>IRI:</strong> <a href="#{{row.class.curie}}"><span class="dotted" title="{{row.class.value}}">{{row.class.value}}</span></a>
 
           <dl class="description">
-          <dd class="comment"><p>{%if row.classDescLanguage.value%}{{row.classDescLanguage.value}}{%else%}{{row.classDesc.value}}{%endif%}</p>
+          <dd class="comment">
+            <p>{%if row.classDescLanguage.value%}{{row.classDescLanguage.value}}{%else%}{{row.classDesc.value}}{%endif%}</p>
           </dd>
+
             <dt>SubClass of</dt>
             <dd>
               {%for i in models.sub%}{%if i.sub.value == row.class.value%}
               <a title="{{i.super.value}}" href="#{{i.super.curie}}">{{i.super.curie}}</a>
               {%endif%}{%endfor%}
             </dd>
+
             <dt>SuperClass of</dt>
             <dd>
               {%for i in models.sub%}{%if i.super.value == row.class.value%}
@@ -839,7 +847,6 @@
             </dd>
 
             <dt>in range of</dt>
-
             <dd>
              <dl>
               {%for i in models.rangeOf%}{%if i.class.value == row.class.value%}
@@ -849,23 +856,25 @@
              </dl>
             </dd>
 
-          </dl>
-        </div>
-          {% endfor %}
+            </dl>
+          </div>
+    {% endfor %}
 
 
-      <h1>Predicates</h1>
+    <h1>Predicates</h1>
+     {% for row in models.predicates %}
+       <div id="{{row.predicate.curie}}" class="entity">
+         <h3> Predicate: 
+            <a href="#{{row.predicate.curie}}">
+               <span class="dotted" title="{{row.predicate.value}}">{%if row.predicateLabelLanguage.value%}{{row.predicateLabelLanguage.value}}{%else%}{{row.predicateLabel.value}}{%endif%}</span>
+            </a>
+         </h3>
+         <strong>IRI:</strong> <a href="#{{row.predicate.curie}}"><span class="dotted" title="{{row.predicate.value}}">{{row.predicate.value}}<span></a>
 
-          {% for row in models.predicates %}
-          <div id="{{row.predicate.curie}}" class="entity">
-              <h3>
-                Predicate: <a href="#{{row.predicate.curie}}"><span class="dotted" title="{{row.predicate.value}}">{%if row.predicateLabelLanguage.value%}{{row.predicateLabelLanguage.value}}{%else%}{{row.predicateLabel.value}}{%endif%}</span></a>
-             </h3>
-             <strong>IRI:</strong> <a href="#{{row.predicate.curie}}"><span class="dotted" title="{{row.predicate.value}}">{{row.predicate.value}}<span></a>
-
-          <dl class="description">
-          <dd class="comment"><p>{%if row.predicateDescLanguage.value%}{{row.predicateDescLanguage.value}}{%else%}{{row.predicateDesc.value}}{%endif%}</p>
-          </dd>
+         <dl class="description">
+            <dd class="comment">
+               <p>{%if row.predicateDescLanguage.value%}{{row.predicateDescLanguage.value}}{%else%}{{row.predicateDesc.value}}{%endif%}</p>
+            </dd>
 
             <dt>SubProperty of</dt>
             <dd>
@@ -875,6 +884,7 @@
               {%endif%}{%endfor%}
              </dl>
             </dd>
+
             <dt>SuperProperty of</dt>
             <dd>
              <dl>
@@ -883,6 +893,7 @@
               {%endif%}{%endfor%}
              </dl>
             </dd>
+
             <dt>Has domain</dt>
             <dd>
              <dl>
@@ -900,14 +911,15 @@
               {%endif%}{%endfor%}
              </dl>
             </dd>
-          </dl>
-        </div>
-          {% endfor %}
 
-       </section>
+         </dl>
+       </div>
+      {% endfor %}
 
-      <footer>
+      </section>
+
+      <div class="footer">
         <h3><strong>Documentation generated using <a href="https://github.com/alangrafu/docuspeakr">DocuSPeaKr</a></strong></h3>
-      </footer>
-  </body>
+      </div>
+   </body>
 </html>
