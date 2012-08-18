@@ -734,9 +734,12 @@
           authors:  [
            { name: "Paulo Pinheiro", 
              url: "http://www.cs.utep.edu/paulo/",
-             company: "Rensselaer Polytechnic Institute, USA" },
+             company: "Pacific Northwest National Laboratory, USA" },
            { name: "Cynthia Chang", 
              company: "Rensselaer Polytechnic Institute, USA" },
+           { name: "Nicholas Del Rio", 
+             url: "http://trust.utep.edu/members/nick/foaf.rdf#me",
+             company: "University of Texas at El Paso, USA" },
            { name: "Deborah McGuinness", 
              url: "http://tw.rpi.edu/instances/Deborah_L_McGuinness",
              company: "Rensselaer Polytechnic Institute, USA" },
@@ -769,20 +772,27 @@
          <p>The Provenance Markup Language (PML 3.0) is an OWL ontology that extends W3C's PROV-O with the best parts of PML 2.0.
         </p>
 
-        <p style="text-align: center;">The namespace for all PROV-O terms is <span class="repeated">http://provenanceweb.org/ontology/pml#</span>.
+        <p style="text-align: center;">The namespace for all PML-3 terms is <span class="repeated">http://provenanceweb.org/ns/pml#</span>
         </p>
 
-        <p style="text-align: center;">The OWL encoding of the PROV Ontology is available <a href="https://raw.github.com/timrdf/pml/master/ontology/pml-3.0.owl">here</a>.
+        <p style="text-align: center;">The OWL encoding of the PML-3 Ontology is available <a href="https://raw.github.com/timrdf/pml/master/ontology/pml-3.0.owl">here</a>.
         </p>
 
     </section>
 
+    <section id="introduction">
+      <h2>Introduction</h2>
+    </section>
 
+
+    {% include "github-pml/doc/html/include-base.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-base.html -->
+    {% include "github-pml/doc/html/include-trust.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-trust.html -->
 
 
    <section id="cross-reference-docuspeakr">
+      <h2>Cross reference for PML 3 classes and properties</h2>
 
-      <h1>{%if first.schema.nameLanguage.value%}{{first.schema.nameLanguage.value}}{%else%}{%if first.schema.name.value%}{{first.schema.name.value}}{%else%}{{first.schema.curie}}{%endif%}{%endif%}</h1>
+      <!--h1>{%if first.schema.nameLanguage.value%}{{first.schema.nameLanguage.value}}{%else%}{%if first.schema.name.value%}{{first.schema.name.value}}{%else%}{{first.schema.curie}}{%endif%}{%endif%}</h1-->
       <p>{%if first.schema.abstractLanguage.value%}{{first.schema.abstractLanguage.value}}{%else%}{{first.schema.abstract.value}}{%endif%}</p>
 
       <div>
@@ -917,6 +927,8 @@
       {% endfor %}
 
       </section>
+
+    {% include "github-pml/doc/html/include-mappings-from-pml2.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-mappings-from-pml2.html -->
 
       <div class="footer">
         <h3><strong>Documentation generated using <a href="https://github.com/alangrafu/docuspeakr">DocuSPeaKr</a></strong></h3>
