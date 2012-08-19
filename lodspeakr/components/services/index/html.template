@@ -782,11 +782,25 @@
 
     <section id="introduction">
       <h2>Introduction</h2>
+       <p>This is where we start.
+       </p>
+    </section>
+
+    <section id="at-a-glance">
+      <h2>PML 3 at a glance</h2>
+       <p>listings.
+       </p>
     </section>
 
 
-    {% include "github-pml/doc/html/include-base.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-base.html -->
-    {% include "github-pml/doc/html/include-trust.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-trust.html -->
+    <section id="description">
+      <h2>The PML 3 Ontology Description</h2>
+
+       {% include "github-pml/doc/html/include-base.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-base.html -->
+
+       {% include "github-pml/doc/html/include-trust.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-trust.html -->
+
+    </section>
 
 
    <section id="cross-reference-docuspeakr">
