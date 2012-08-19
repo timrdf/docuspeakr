@@ -7,21 +7,21 @@ SELECT ?class ?classLabel ?classDesc ?classLabelLanguage ?classDescLanguage WHER
   }
    OPTIONAL{
     ?class
-            {{lodspk.comment|default:"rdfs:comment"}} ?classDesc.
+            rdfs:comment ?classDesc.
     FILTER(lang(?classDesc) =  "" || lang(?classDesc) = "en")
   }
    OPTIONAL{
-    ?class   {{lodspk.label|default:"rdfs:label"}} ?classLabel.
+    ?class   rdfs:label ?classLabel.
     FILTER(lang(?classLabel) =  "" || lang(?classLabel) = "en")
   }
   OPTIONAL{
   ?class 
-         {{lodspk.comment|default:"rdfs:comment"}} ?classDescLanguage.
+         rdfs:comment ?classDescLanguage.
   FILTER(lang(?classDescLanguage) = "{{lodspk.args.arg0|default:"en"}}")
   }
   OPTIONAL{
   ?class 
-         {{lodspk.label|default:"rdfs:label"}} ?classLabelLanguage.
+         rdfs:label ?classLabelLanguage.
          FILTER(lang(?classLabelLanguage) = "{{lodspk.args.arg0|default:"en"}}")
   }
 }
