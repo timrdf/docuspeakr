@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+#
 # Writes many html files to disk, for inclusion in an OWL ontology documentation
 # page. Organizes terms by prov:category.
 #
@@ -13,9 +14,6 @@
 #    cross-reference-{category}.html
 #    qualified-forms-{category}.html
 #
-#
-#
-#
 #                                                                              |
 
 import sys, datetime, uuid
@@ -24,9 +22,10 @@ from sets import Set
 from rdflib import *
 
 import rdflib
-rdflib.plugin.register('sparql', rdflib.query.Processor, 'rdfextras.sparql.processor', 'Processor')
-rdflib.plugin.register('sparql', rdflib.query.Result,    'rdfextras.sparql.query',     'SPARQLQueryResult')
-
+rdflib.plugin.register('sparql', rdflib.query.Processor,
+                       'rdfextras.sparql.processor', 'Processor')
+rdflib.plugin.register('sparql', rdflib.query.Result,
+                       'rdfextras.sparql.query',     'SPARQLQueryResult')
 from surf import *
 from surf.query import a, select
 
@@ -68,43 +67,27 @@ store.load_triples(source=ont_url) # From URL
 graph = store.reader.graph
 prefixes = dict(prov=str(ns.PROV), rdf=str(ns.RDF), owl=str(ns.OWL), pml=str(ns.PML))
 
+Thing              = session.get_class(ns.OWL["Thing"])
+Classes            = session.get_class(ns.OWL["Class"])
 DatatypeProperties = session.get_class(ns.OWL["DatatypeProperty"])
 ObjectProperties   = session.get_class(ns.OWL["ObjectProperty"])
-Classes            = session.get_class(ns.OWL["Class"])
-Thing              = session.get_class(ns.OWL["Thing"])
+RDFProperties      = session.get_class(ns.RDF["Property"])
 
-all_ordered = { 'classes' : [], 'properties' : [],
-                'datatypeproperties' : [], 'objectproperties' : []}
+def inFocus(uri) : return uri.subject.startswith(focus_namespace)
+ontology = {}
+ontology['classes']             = filter(inFocus, Classes.all())
+ontology['object-properties']   = filter(inFocus, ObjectProperties.all())
+ontology['datatype-properties'] = filter(inFocus, DatatypeProperties.all())
+ontology['properties']          = filter(inFocus, ObjectProperties.all())
+ontology['properties'].extend(filter(inFocus, DatatypeProperties.all()))
 
-for owlClass in Classes.all():
-   if owlClass.subject.startswith(focus_namespace):
-      all_ordered['classes'].append(owlClass.subject)
+sorts = { 
+   'narrative' : lambda R: float(R.pml_order.first if len(R.pml_order)>0 else sys.maxint),
+   'uri'       : lambda R: R.subject
+}
 
-for prop in DatatypeProperties.all():
-   if prop.subject.startswith(focus_namespace):
-      all_ordered['properties'].append(prop.subject)
-      all_ordered['datatypeproperties'].append(prop.subject)
-
-for prop in ObjectProperties.all():
-   if prop.subject.startswith(focus_namespace):
-      all_ordered['properties'].append(prop.subject)
-      all_ordered['objectproperties'].append(prop.subject)
-
-all_ordered['classes'].sort()
-all_ordered['properties'].sort()
-all_ordered['objectproperties'].sort()
-all_ordered['datatypeproperties'].sort()
-
-termsQuery = '''
-select ?term 
-where {
-     ?term a ?type .
-     filter(?type = rdf:Property         || 
-            ?type = owl:DatatypeProperty || 
-            ?type = owl:ObjectProperty   ||
-            ?type = owl:Class)
-     filter(regex(str(?term),"'''+focus_namespace+'''"))
-} order by ?term'''
+# ontology['classes'].sort(key=sorts['narrative'])
+# ontology['classes'].sort(key=sorts['uri'])
 
 categories = {}
 for bindings in graph.query('select distinct ?cat where { [] prov:category ?cat } order by ?cat', initNs=prefixes):
@@ -119,15 +102,27 @@ for category in categories.keys():
    if not(os.path.exists(glanceName)) and not(os.path.exists(crossName)) and not(os.path.exists(qualsName)):
       print '  ' + glanceName + '  -  ' + crossName + '  -  ' + qualsName
 
-      # at-a-glance
-      glance = open(glanceName, 'w')
+      def inCategory(R) : return R.prov_category.first == category
+      focus = { 
+         'classes'    : filter(inCategory, ontology['classes']),
+         'properties' : filter(inCategory, ontology['properties'])
+      }
+      focus['classes'].sort(key=sorts['narrative'])
+      focus['properties'].sort(key=sorts['narrative'])
+
+      cssClass = { 
+         ns.OWL['ObjectProperty']   : 'object-property',
+         ns.OWL['DatatypeProperty'] : 'datatype-property',
+      }
+
+      # at-a-glance # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+      glance = open(glanceName, 'w')                                          #
       glance.write('\n')
       glance.write('<div\n')
       glance.write('     class="'+PREFIX+'-'+category+' owl-classes at-a-glance">\n')
       glance.write('  <ul class="hlist">\n')
 
-      for uri in ordered['classes']:
-         owlClass = session.get_resource(uri,Classes)
+      for owlClass in focus['classes']:
          qname = owlClass.subject.split('#')
          glance.write('    <li>\n')
          glance.write('      <a href="#'+qname[1]+'">'+PREFIX+':'+qname[1]+'</a>\n')
@@ -140,20 +135,60 @@ for category in categories.keys():
       glance.write('     class="'+PREFIX+'-'+category+' owl-properties at-a-glance">\n')
       glance.write('  <ul class="hlist">\n')
 
-      for uri in ordered['properties']:
-         property = session.get_resource(uri,Thing)
+      for property in focus['properties']:
          qname = property.subject.split('#')
-         glance.write('    <li class="'+propertyTypes[uri]+'">\n')
+         glance.write('    <li class="'+cssClass[property.rdf_type.first]+'">\n')
          glance.write('      <a href="#'+qname[1]+'">'+PREFIX+':'+qname[1]+'</a>\n')
          glance.write('    </li>\n')
       glance.write('  </ul>\n')
-      glance.write('</div>\n')
-      glance.close()
+      glance.write('</div>\n')                                               #
+      glance.close() # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-      cross  = open(crossName, 'w')
+      cross = open(crossName, 'w')
+      # 178
+      cross.write('<div\n') # We want to include it multiple times: id="'+PREFIX+'-'+category+'-owl-classes-crossreference"\n')
+      cross.write('     class="'+PREFIX+'-'+category+' owl-classes crossreference"\n')
+      cross.write('     xmlns:dcterms="http://purl.org/dc/terms/"\n')
+      cross.write('     xmlns:prov="http://www.w3.org/ns/prov#">\n')
+      for owlClass in focus['classes']:
+         qname = owlClass.subject.split('#')
+         cross.write('\n')
+         cross.write('  <div id="'+qname[1]+'" class="entity">\n')
+         cross.write('    <h3>\n')
+         cross.write('      Class: <a href="#'+qname[1]+'"><span class="dotted" title="'+owlClass.subject+'">'+PREFIX+':'+qname[1]+'</span></a>\n')
+         cross.write('      <span class="backlink">\n')
+         #cross.write('         back to <a href="#toc">ToC</a> or\n')
+         cross.write('         back to <a href="#'+PREFIX+'-'+category+'-owl-terms-at-a-glance">'+category+' classes</a>\n')
+         cross.write('      </span>\n')
+         cross.write('    </h3>\n')
+      # 194
+      # 729
+         cross.write('\n')
+         cross.write('      </dl>\n')
+
+
+         cross.write('    </div>\n') # e.g. <div class="description">
+         cross.write('  </div>\n')   # e.g. <div id="wasGeneratedBy" class="entity">
+         cross.write('\n')
+      cross.write('</div>\n')        # e.g. <div id="prov-starting-point-owl-classes-crossreference"
+      # 736  
       cross.close()
 
       quals  = open(qualsName, 'w')
       quals.close()
    else:
       print '  '+glanceName + ' or ' + crossName + " already exists. Not modifying."
+
+
+# SuRF and rdflib can't handle SPARQL querying very well, otherwise,
+# It'd be great to use this:
+termsQuery = '''
+select ?term
+where {
+     ?term a ?type .
+     filter(?type = rdf:Property         ||
+            ?type = owl:DatatypeProperty ||
+            ?type = owl:ObjectProperty   ||
+            ?type = owl:Class)
+     filter(regex(str(?term),"'''+focus_namespace+'''"))
+} order by ?term'''

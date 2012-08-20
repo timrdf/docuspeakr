@@ -11,3 +11,7 @@ popd &> /dev/null
 pushd hg-prov-wg &> /dev/null
    hg pull
 popd &> /dev/null
+
+pushd includes &> /dev/null
+   rm -f *.html; .././cross-reference.py pml http://provenanceweb.org/ns/pml# https://raw.github.com/timrdf/pml/master/ontology/pml-3.0.owl http://provenanceweb.org/ns/pml#
+popd &> /dev/null

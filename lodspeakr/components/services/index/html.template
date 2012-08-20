@@ -769,7 +769,8 @@
   <body>
 
     <section id="abstract">
-         <p>The Provenance Markup Language (PML 3.0) is an OWL ontology that extends W3C's PROV-O with the best parts of PML 2.0.
+        <p>The Provenance Markup Language (PML 3.0) is an OWL ontology that extends W3C's PROV-O with the best parts of PML 2.0.
+         {% include 'fake.txt' %}
         </p>
 
         <p style="text-align: center;">The namespace for all PML-3 terms is <span class="repeated">http://provenanceweb.org/ns/pml#</span>
@@ -782,29 +783,75 @@
 
     <section id="introduction">
       <h2>Introduction</h2>
-       <p>This is where we start.
+       <p>{% include 'fake.txt' %}
        </p>
     </section>
 
     <section id="at-a-glance">
       <h2>PML 3 at a glance</h2>
-       <p>listings.
+
+       <p><strong>PML 3 Base classes and properties</strong> {% include 'fake.txt' %} 
+         The classes and properties in this category are listed below and are discussed in <a href="#description-base-terms">Section 3.1</a>.
        </p>
+       {% include 'includes/at-a-glance-base.html' %}
+
+       <p><strong>PML 3 Proof classes and properties</strong> {% include 'fake.txt' %} 
+         The classes and properties in this category are listed below and are discussed in <a href="#description-proof-terms">Section 3.2</a>.
+       </p>
+       {% include 'includes/at-a-glance-proof.html' %}
+
+       <p><strong>PML 3 Trust classes and properties</strong> {% include 'fake.txt' %} 
+        The classes and properties in this category are listed below and are discussed in <a href="#description-trust-terms">Section 3.3</a>.
+       </p>
+       {% include 'includes/at-a-glance-qualified.html' %}
+
     </section>
 
 
     <section id="description">
       <h2>The PML 3 Ontology Description</h2>
 
-       {% include "github-pml/doc/html/include-base.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-base.html -->
+       {% include "github-pml/doc/html/include-base.html"  %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-base.html -->
+
+       {% include "github-pml/doc/html/include-proof.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-proof.html -->
 
        {% include "github-pml/doc/html/include-trust.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-trust.html -->
+
+       <section id="qualifiedcross-reference-python">
+          <h2>PML 3 Qualifications</h2>
+          {% include 'includes/qualifed-forms-base.html' %}
+          {% include 'includes/qualifed-forms-proof.html' %}
+          {% include 'includes/qualifed-forms-qualified.html' %}
+       </section>
 
     </section>
 
 
+   <section id="cross-reference-python">
+      <h2>Cross reference for PROV-O classes and properties (cross-reference.py)</h2>
+
+      <section id="pml-base-owl-terms-at-a-glance"> <!-- referenced from within includes/cross-reference-base.html -->
+         <h2>PML 3 Base Terms</h2>
+         {% include 'includes/at-a-glance-base.html' %}
+         {% include 'includes/cross-reference-base.html' %}
+      </section>
+
+      <section id="pml-proof-owl-terms-at-a-glance"> <!-- referenced from within includes/cross-reference-proof.html -->
+         <h2>PML 3 Proof Terms</h2>
+         {% include 'includes/at-a-glance-proof.html' %}
+         {% include 'includes/cross-reference-proof.html' %}
+      </section>
+
+      <section id="pml-trust-owl-terms-at-a-glance"> <!-- referenced from within includes/cross-reference-trust.html -->
+         <h2>PML 3 Trust Terms</h2>
+         <p>{% include 'fake.txt' %}</p>
+         {% include 'includes/at-a-glance-qualified.html' %}
+         {% include 'includes/cross-reference-qualified.html' %}
+      </section>
+   </section>
+
    <section id="cross-reference-docuspeakr">
-      <h2>Cross reference for PML 3 classes and properties</h2>
+      <h2>Cross reference for PML 3 classes and properties (docuspeakr)</h2>
 
 {%include "../../includes/beginBody.inc"%}
 
@@ -1059,6 +1106,8 @@
   </div>
     {% endfor %}
 </section>
+
+{% include "github-pml/doc/html/include-mappings-from-pml2.html" %} <!-- https://github.com/timrdf/pml/blob/master/doc/html/include-mappings-from-pml2.html -->
 
 {%include "../../includes/beforeFooter.inc"%}
     
